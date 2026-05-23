@@ -45,6 +45,33 @@ Fixed seeds give deterministic controlled runs. Omitting a seed through the
 simulator bridge generates a valid replay seed, which must be recorded with each
 trajectory.
 
+## Live Game Interaction Layer
+
+The live interaction layer is policy-independent. It wraps the STS2MCP
+singleplayer mod API and provides a future bridge from the actual game to the
+same semantic state/action contract used by the simulator:
+
+```text
+Actual StS2 game
+  -> STS2MCP singleplayer API
+  -> LiveGameClient
+  -> LiveSnapshot / LiveAction
+  -> observation layer and policy
+```
+
+Implemented live-layer modules live under `src/sts2_rl/live/`. The first backend
+uses `GET /api/v1/singleplayer?format=json` for snapshots and
+`POST /api/v1/singleplayer` for actions. Multiplayer is intentionally out of
+scope.
+
+See [docs/architecture/live-game-interaction-layer.md](docs/architecture/live-game-interaction-layer.md).
+
+Attribution: this layer is designed around the singleplayer API exposed by
+[Gennadiyev/STS2MCP](https://github.com/Gennadiyev/STS2MCP). StS2 modding
+references used during design include
+[Alchyr/ModTemplate-StS2](https://github.com/Alchyr/ModTemplate-StS2) and
+[Alchyr/BaseLib-StS2](https://github.com/Alchyr/BaseLib-StS2).
+
 ## Current Planning Docs
 
 - [RL architecture prep plan](docs/superpowers/plans/2026-05-22-rl-agent-architecture-prep.md)
